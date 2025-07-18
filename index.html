@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: url('ac4-removebg-preview.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        header {
+            background-color: #a50000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .bienvenida {
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .continuar-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            background-color: #a50000;
+            cursor: pointer;
+        }
+
+        .continuar-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .continuar-azul {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            background-color: #007BFF;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .continuar-azul:hover {
+            background-color: #0056b3;
+        }
+
+        footer.footer-rojo {
+            background-color: #a50000;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .icono-usuario {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .menu-interaccion {
+            display: none;
+            position: absolute;
+            right: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .menu-interaccion ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .menu-interaccion ul li {
+            margin: 10px 0;
+        }
+
+        .menu-interaccion ul li a {
+            text-decoration: none;
+            color: #a50000;
+        }
+
+        .menu-interaccion.oculto {
+            display: none;
+        }
+
+        .menu-interaccion.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="titulo-central">ECATEPEC EN MOVIMIENTO</span>
+    <button id="usuario-btn" style="float: right; background: none; border: none;">
+        <img src="ac4-removebg-preview.png" alt="Usuario" class="icono-usuario">
+    </button>
+    <div class="subtitulo">Proyecto integral de movilidad</div>
+</header>
+
+<nav id="menu-interaccion" class="menu-interaccion oculto">
+    <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Usuario Movimex</a></li>
+        <li><a href="#">Ajustes</a></li>
+    </ul>
+</nav>
+
+<!-- ...existing code... -->
+<div class="bienvenida">
+    <h1>¡Bienvenido!</h1>
+    <!-- FORMULARIO PARA GUARDAR DATOS -->
+    <form id="registro-form" action="movimex.php" method="POST">
+        <label>Número:</label>
+        <input type="number" name="numero" required>
+
+        <label>Correo electrónico:</label>
+        <input type="email" name="correo" required>
+
+        <label>Contraseña:</label>
+        <input type="password" name="contrasena" required>
+
+        <!-- Botón rojo -->
+        <button type="submit" class="continuar-btn">Guardar</button>
+    </form>
+
+    <!-- Mensaje de confirmación -->
+    <div id="mensaje" style="margin-top: 15px; color: green; font-weight: bold;"></div>
+
+    <!-- Botón azul -->
+    <button class="continuar-azul" onclick="window.location.href='menu.html'">Continuar</button>
+</div>
+
+<script>
+document.getElementById('registro-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Detiene el envío normal
+
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch('movimex.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data.trim() === "OK") {
+            document.getElementById('mensaje').textContent = "✅ Datos guardados con éxito.";
+            form.reset(); // Limpia el formulario
+        } else {
+            document.getElementById('mensaje').textContent = "❌ " + data;
+        }
+    })
+    .catch(error => {
+        document.getElementById('mensaje').textContent = "❌ Error al guardar.";
+        console.error(error);
+    });
+});
+</script>
+
+<footer class="footer-rojo">
+    <div>GOBIERNO DE ECATEPEC</div>
+    <div>SIGAMOS HACIENDO HISTORIA</div>
+</footer>
+
+<script>
+    // Menú desplegable
+    document.getElementById('usuario-btn').onclick = function(event) {
+        event.stopPropagation();
+        var menu = document.getElementById('menu-interaccion');
+        menu.classList.toggle('visible');
+    };
+
+    document.addEventListener('click', function() {
+        document.getElementById('menu-interaccion').classList.remove('visible');
+    });
+
+    document.getElementById('menu-interaccion').onclick = function(event) {
+        event.stopPropagation();
+    };
+</script>
+
+</body>
+</html>
